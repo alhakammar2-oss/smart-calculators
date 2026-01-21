@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     direction: rtl;
     background:#f2f2f2;
     padding:20px;
@@ -16,22 +16,28 @@ body{
     max-width:420px;
     margin:auto;
     padding:20px;
-    border-radius:12px;
+    border-radius:14px;
 }
-h2{text-align:center;}
+h2{text-align:center;margin-bottom:15px;}
+.tabs{
+    display:flex;
+    gap:5px;
+}
 .tabs button{
-    width:32%;
+    flex:1;
     padding:10px;
     border:none;
-    font-size:14px;
     background:#ddd;
+    font-size:14px;
+    border-radius:6px;
 }
 .tabs button.active{
     background:#007bff;
     color:#fff;
 }
-.box{margin-top:15px;}
-select,input,button.calc{
+.section{display:none;margin-top:15px;}
+.section.active{display:block;}
+input,select,button.calc{
     width:100%;
     padding:12px;
     margin-top:8px;
@@ -39,8 +45,9 @@ select,input,button.calc{
 }
 button.calc{
     background:#28a745;
-    color:white;
+    color:#fff;
     border:none;
+    border-radius:6px;
 }
 .calc-grid{
     display:grid;
@@ -52,27 +59,28 @@ button.calc{
     padding:15px;
     font-size:18px;
     border:none;
+    border-radius:6px;
     background:#eee;
 }
-.calc-grid button.op{background:#ffc107;}
-.calc-grid button.eq{background:#28a745;color:#fff;}
-.result{
-    margin-top:15px;
-    font-size:18px;
-    text-align:center;
-}
-input.display{
-    font-size:20px;
-    text-align:left;
-}
+.op{background:#ffc107;}
+.eq{background:#28a745;color:#fff;}
+.result{text-align:center;font-size:18px;margin-top:12px;}
+.display{text-align:left;font-size:20px;}
 </style>
 </head>
+
+<body>
+<div class="app">
+<h2>📱 الحاسبات الذكية</h2>
+
 <div class="tabs">
-    <button type="button" id="t1" class="active" onclick="showCalc(1)">💱 عملات</button>
-    <button type="button" id="t2" onclick="showCalc(2)">🧮 أرباح</button>
-    <button type="button" id="t3" onclick="showCalc(3)">➕ حاسبة</button>
+    <button data-tab="currency" class="active">💱 عملات</button>
+    <button data-tab="profit">🧮 أرباح</button>
+    <button data-tab="calc">➕ حاسبة</button>
 </div>
-<div id="c1" class="box">
+
+<!-- تحويل العملات -->
+<div id="currency" class="section active">
 <select id="from">
 <option value="yer">ريال يمني</option>
 <option value="sar">ريال سعودي</option>
@@ -84,30 +92,49 @@ input.display{
 <option value="usd">دولار</option>
 </select>
 <input type="number" id="amount" placeholder="المبلغ">
-<button class="calc" onclick="convert()">تحويل</button>
-<div class="result" id="r1"></div>
+<button class="calc" id="convertBtn">تحويل</button>
+<div class="result" id="currencyResult"></div>
 </div>
 
-<div id="c2" class="box" style="display:none;">
+<!-- الأرباح -->
+<div id="profit" class="section">
 <input type="number" id="capital" placeholder="رأس المال">
 <input type="number" id="expenses" placeholder="المصروفات">
 <input type="number" id="sale" placeholder="سعر البيع">
-<button class="calc" onclick="profit()">احسب</button>
-<div class="result" id="r2"></div>
+<button class="calc" id="profitBtn">احسب</button>
+<div class="result" id="profitResult"></div>
 </div>
 
-<div id="c3" class="box" style="display:none;">
+<!-- الحاسبة -->
+<div id="calc" class="section">
 <input class="display" id="calcDisplay" readonly>
 <div class="calc-grid">
-<button onclick="add('7')">7</button>
-<button onclick="add('8')">8</button>
-<button onclick="add('9')">9</button>
-<button class="op" onclick="add('/')">÷</button>
+<button data-val="7">7</button><button data-val="8">8</button><button data-val="9">9</button><button class="op" data-val="/">÷</button>
+<button data-val="4">4</button><button data-val="5">5</button><button data-val="6">6</button><button class="op" data-val="*">×</button>
+<button data-val="1">1</button><button data-val="2">2</button><button data-val="3">3</button><button class="op" data-val="-">−</button>
+<button data-val="0">0</button><button id="clear">C</button><button class="eq" id="equals">=</button><button class="op" data-val="+">+</button>
+</div>
+</div>
 
-<button onclick="add('4')">4</button>
-<button onclick="add('5')">5</button>
-<button onclick="add('6')">6</button>
-<button class="op" onclick="add('*')">×</button>
+</div>
 
-<button onclick="add('1')">1</button>
-<button onclick
+<script>
+const tabs=document.querySelectorAll('.tabs button');
+const sections=document.querySelectorAll('.section');
+
+tabs.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        tabs.forEach(b=>b.classList.remove('active'));
+        sections.forEach(s=>s.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+});
+
+// تحويل العملات
+const rates={yer:1,sar:150,usd:550};
+document.getElementById('convertBtn').onclick=()=>{
+    let a=amount.value;
+    if(!a)return currencyResult.textContent='أدخل مبلغ';
+    currencyResult.t
