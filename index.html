@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>الحاسبة الذكية للاتصال</title>
+    <style>
+        body {
+            font-family: Arial;
+            direction: rtl;
+            background: #f5f5f5;
+            text-align: center;
+            padding: 30px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .result {
+            background: white;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>📞 الحاسبة الذكية للاتصال</h2>
+
+    <input type="number" id="minutes" placeholder="عدد الدقائق">
+    <input type="number" id="price" placeholder="سعر الدقيقة">
+
+    <button onclick="calculate()">احسب</button>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        function calculate() {
+            let minutes = document.getElementById("minutes").value;
+            let price = document.getElementById("price").value;
+            let total = minutes * price;
+            document.getElementById("result").innerHTML =
+                "💰 التكلفة الإجمالية: " + total + " ريال";
+        }
+    </script>
+
+</body>
+</html>
