@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>تطبيق الحاسبات الذكية</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body{
     font-family: Arial;
@@ -19,23 +18,19 @@ body{
     padding:20px;
     border-radius:12px;
 }
-h2{
-    text-align:center;
-}
+h2{text-align:center;}
 .tabs button{
-    width:49%;
+    width:32%;
     padding:10px;
     border:none;
-    font-size:16px;
+    font-size:14px;
     background:#ddd;
 }
 .tabs button.active{
     background:#007bff;
     color:#fff;
 }
-.box{
-    margin-top:15px;
-}
+.box{margin-top:15px;}
 select,input,button.calc{
     width:100%;
     padding:12px;
@@ -47,127 +42,132 @@ button.calc{
     color:white;
     border:none;
 }
+.calc-grid{
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:8px;
+    margin-top:10px;
+}
+.calc-grid button{
+    padding:15px;
+    font-size:18px;
+    border:none;
+    background:#eee;
+}
+.calc-grid button.op{
+    background:#ffc107;
+}
+.calc-grid button.eq{
+    background:#28a745;
+    color:#fff;
+}
 .result{
     margin-top:15px;
     font-size:18px;
     text-align:center;
 }
+input.display{
+    font-size:20px;
+    text-align:left;
+}
 </style>
 </head>
 
 <body>
-
 <div class="app">
 <h2>📱 الحاسبات الذكية</h2>
 
 <div class="tabs">
-    <button id="tabCurrency" class="active" onclick="showCalc('currency')">💱 تحويل العملات</button>
-    <button id="tabProfit" onclick="showCalc('profit')">🧮 حاسبة الأرباح</button>
+    <button id="t1" class="active" onclick="showCalc(1)">💱 عملات</button>
+    <button id="t2" onclick="showCalc(2)">🧮 أرباح</button>
+    <button id="t3" onclick="showCalc(3)">➕ حاسبة</button>
 </div>
 
 <!-- تحويل العملات -->
-<div id="currency" class="box">
-    <select id="from">
-        <option value="yer">ريال يمني</option>
-        <option value="sar">ريال سعودي</option>
-        <option value="usd">دولار أمريكي</option>
-    </select>
-
-    <select id="to">
-        <option value="sar">ريال سعودي</option>
-        <option value="yer">ريال يمني</option>
-        <option value="usd">دولار أمريكي</option>
-    </select>
-
-    <input type="number" id="amount" placeholder="أدخل المبلغ">
-    <button class="calc" onclick="convert()">تحويل</button>
-    <div class="result" id="currencyResult"></div>
+<div id="c1" class="box">
+<select id="from">
+<option value="yer">ريال يمني</option>
+<option value="sar">ريال سعودي</option>
+<option value="usd">دولار</option>
+</select>
+<select id="to">
+<option value="sar">ريال سعودي</option>
+<option value="yer">ريال يمني</option>
+<option value="usd">دولار</option>
+</select>
+<input type="number" id="amount" placeholder="المبلغ">
+<button class="calc" onclick="convert()">تحويل</button>
+<div class="result" id="r1"></div>
 </div>
 
-<!-- حاسبة الأرباح -->
-<div id="profit" class="box" style="display:none;">
-    <input type="number" id="capital" placeholder="رأس المال">
-    <input type="number" id="expenses" placeholder="المصروفات">
-    <input type="number" id="sale" placeholder="سعر البيع">
-    <button class="calc" onclick="calcProfit()">احسب</button>
-    <div class="result" id="profitResult"></div>
+<!-- الأرباح -->
+<div id="c2" class="box" style="display:none;">
+<input type="number" id="capital" placeholder="رأس المال">
+<input type="number" id="expenses" placeholder="المصروفات">
+<input type="number" id="sale" placeholder="سعر البيع">
+<button class="calc" onclick="profit()">احسب</button>
+<div class="result" id="r2"></div>
+</div>
+
+<!-- الحاسبة العادية -->
+<div id="c3" class="box" style="display:none;">
+<input class="display" id="calcDisplay" readonly>
+<div class="calc-grid">
+<button onclick="add('7')">7</button>
+<button onclick="add('8')">8</button>
+<button onclick="add('9')">9</button>
+<button class="op" onclick="add('/')">÷</button>
+
+<button onclick="add('4')">4</button>
+<button onclick="add('5')">5</button>
+<button onclick="add('6')">6</button>
+<button class="op" onclick="add('*')">×</button>
+
+<button onclick="add('1')">1</button>
+<button onclick="add('2')">2</button>
+<button onclick="add('3')">3</button>
+<button class="op" onclick="add('-')">−</button>
+
+<button onclick="add('0')">0</button>
+<button onclick="clearCalc()">C</button>
+<button class="eq" onclick="calc()">=</button>
+<button class="op" onclick="add('+')">+</button>
+</div>
 </div>
 
 </div>
 
 <script>
-const rates = { yer:1, sar:150, usd:550 };
+const rates={yer:1,sar:150,usd:550};
 
-function showCalc(type){
-    document.getElementById("currency").style.display = "none";
-    document.getElementById("profit").style.display = "none";
-    document.getElementById("tabCurrency").classList.remove("active");
-    document.getElementById("tabProfit").classList.remove("active");
-
-    if(type==="currency"){
-        document.getElementById("currency").style.display="block";
-        document.getElementById("tabCurrency").classList.add("active");
-    }else{
-        document.getElementById("profit").style.display="block";
-        document.getElementById("tabProfit").classList.add("active");
-    }
+function showCalc(n){
+    [1,2,3].forEach(i=>{
+        document.getElementById("c"+i).style.display="none";
+        document.getElementById("t"+i).classList.remove("active");
+    });
+    document.getElementById("c"+n).style.display="block";
+    document.getElementById("t"+n).classList.add("active");
 }
 
 function convert(){
-    let from=document.getElementById("from").value;
-    let to=document.getElementById("to").value;
-    let amount=document.getElementById("amount").value;
-    let r=document.getElementById("currencyResult");
-
-    if(amount<=0){
-        r.innerHTML="⚠️ أدخل مبلغ صحيح";
-        r.style.color="red";
-        return;
-    }
-
-    let yer=amount*rates[from];
-    let final=yer/rates[to];
-    r.style.color="green";
-    r.innerHTML="الناتج: "+final.toFixed(2);
+    let a=amount.value;
+    if(a<=0){r1.innerHTML="أدخل مبلغ";return;}
+    r1.innerHTML=(a*rates[from.value]/rates[to.value]).toFixed(2);
 }
 
-function calcProfit(){
-    let capital=Number(document.getElementById("capital").value);
-    let expenses=Number(document.getElementById("expenses").value||0);
-    let sale=Number(document.getElementById("sale").value);
-    let r=document.getElementById("profitResult");
+function profit(){
+    let p=sale.value-(+capital.value+(+expenses.value||0));
+    r2.innerHTML=p>=0?"ربح: "+p:"خسارة: "+Math.abs(p);
+}
 
-    if(capital<=0 || sale<=0){
-        r.innerHTML="⚠️ أدخل القيم بشكل صحيح";
-        r.style.color="red";
-        return;
-    }
-
-    let profit=sale-(capital+expenses);
-    r.style.color=profit>=0?"green":"red";
-    r.innerHTML=profit>=0?
-        "✅ الربح: "+profit:
-        "❌ الخسارة: "+Math.abs(profit);
+function add(v){calcDisplay.value+=v;}
+function clearCalc(){calcDisplay.value="";}
+function calc(){
+    try{calcDisplay.value=eval(calcDisplay.value);}
+    catch{calcDisplay.value="خطأ";}
 }
 </script>
 
 </body>
 </html>
-    let sale=document.getElementById("sale").value;
-    let r=document.getElementById("profitResult");
 
-    if(capital===""||sale===""){
-        r.innerHTML="⚠️ أدخل البيانات";
-        r.style.color="red";return;
-    }
-
-    let profit=sale-(Number(capital)+Number(expenses||0));
-    r.style.color=profit>=0?"green":"red";
-    r.innerHTML=profit>=0?
-        "✅ الربح: "+profit:
-        "❌ الخسارة: "+Math.abs(profit);
-}
-</script>
-
-</body>
-</html>
