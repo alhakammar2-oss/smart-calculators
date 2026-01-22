@@ -79,7 +79,6 @@ button.calc{
     <button data-tab="calc">➕ حاسبة</button>
 </div>
 
-<!-- تحويل العملات -->
 <div id="currency" class="section active">
 <select id="from">
 <option value="yer">ريال يمني</option>
@@ -96,7 +95,6 @@ button.calc{
 <div class="result" id="currencyResult"></div>
 </div>
 
-<!-- الأرباح -->
 <div id="profit" class="section">
 <input type="number" id="capital" placeholder="رأس المال">
 <input type="number" id="expenses" placeholder="المصروفات">
@@ -105,7 +103,6 @@ button.calc{
 <div class="result" id="profitResult"></div>
 </div>
 
-<!-- الحاسبة -->
 <div id="calc" class="section">
 <input class="display" id="calcDisplay" readonly>
 <div class="calc-grid">
@@ -126,12 +123,32 @@ tabs.forEach(btn=>{
     btn.addEventListener('click',()=>{
         tabs.forEach(b=>b.classList.remove('active'));
         sections.forEach(s=>s.classList.remove('active'));
-
         btn.classList.add('active');
         document.getElementById(btn.dataset.tab).classList.add('active');
     });
 });
 
+const rates={yer:1,sar:150,usd:550};
+convertBtn.onclick=()=>{
+    let a=amount.value;
+    currencyResult.textContent=a?(a*rates[from.value]/rates[to.value]).toFixed(2):'أدخل مبلغ';
+};
+profitBtn.onclick=()=>{
+    let p=sale.value-(+capital.value+(+expenses.value||0));
+    profitResult.textContent=p>=0?'ربح: '+p:'خسارة: '+Math.abs(p);
+};
+document.querySelectorAll('.calc-grid button[data-val]').forEach(b=>{
+    b.onclick=()=>calcDisplay.value+=b.dataset.val;
+});
+clear.onclick=()=>calcDisplay.value='';
+equals.onclick=()=>{
+    try{calcDisplay.value=eval(calcDisplay.value);}
+    catch{calcDisplay.value='خطأ';}
+};
+</script>
+
+</body>
+</html>
 // تحويل العملات
 const rates={yer:1,sar:150,usd:550};
 document.getElementById('convertBtn').onclick=()=>{
